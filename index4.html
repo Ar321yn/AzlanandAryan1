@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+      <link rel="shortcut icon" type="x-icon" href="Logo.png">
+
+    <title>AZLANS</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-container textarea {
+            flex: 1;
+            padding: 10px;
+            font-family: monospace;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+
+        .editor-container button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .preview-container {
+            flex: 1;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .preview-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        #userPages {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            display: none;
+        }
+
+        #userPages button{
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #showUserPages{
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #googleClone{
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        #googleClone input{
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+        }
+
+        #googleClone button{
+            padding: 10px 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dadce0;
+            color: #3c4043;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    
+
+    <button id="showUserPages">View User Pages</button>
+
+    <div id="userPages">
+        </div>
+
+    <div class="editor-container">
+        <textarea id="codeEditor" placeholder="Enter HTML, CSS, or JavaScript code here..."></textarea>
+        <button id="publishButton">Publish</button>
+    </div>
+
+    <div class="preview-container">
+        <iframe id="previewFrame"></iframe>
+    </div>
+
+    <script>
+        const codeEditor = document.getElementById('codeEditor');
+        const publishButton = document.getElementById('publishButton');
+        const previewFrame = document.getElementById('previewFrame');
+        const userPagesDiv = document.getElementById('userPages');
+        const showUserPagesButton = document.getElementById('showUserPages');
+
+        let userPageCount = 0;
+        const userPages = {};
+
+        publishButton.addEventListener('click', () => {
+            const code = codeEditor.value;
+            const blob = new Blob([code], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            previewFrame.src = url;
+
+            const pageName = `User Page ${++userPageCount}`;
+            userPages[pageName] = url;
+
+            const pageButton = document.createElement('button');
+            pageButton.textContent = pageName;
+            pageButton.addEventListener('click', () => {
+                window.open(userPages[pageName], '_blank');
+            });
+            userPagesDiv.appendChild(pageButton);
+
+            codeEditor.value = ""; //clear the editor
+        });
+
+        showUserPagesButton.addEventListener('click', () => {
+            if (userPagesDiv.style.display === 'block') {
+                userPagesDiv.style.display = 'none';
+            } else {
+                userPagesDiv.style.display = 'block';
+            }
+        });
+
+    </script>
+</body>
+</html>
